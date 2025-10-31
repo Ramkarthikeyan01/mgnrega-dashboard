@@ -69,3 +69,9 @@ app.get("/api/data", async (req, res) => {
 
 // ✅ Start the server
 app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
+// 🟢 Keep Render backend awake every 14 minutes
+setInterval(() => {
+  fetch("https://mgnrega-dashboard-back.onrender.com/api/data")
+    .then(() => console.log("🔁 Pinged backend to stay awake"))
+    .catch(err => console.error("⚠️ Ping failed:", err.message));
+}, 14 * 60 * 1000); // every 14 minutes
