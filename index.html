@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MGNREGA Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f2f2f2;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #2e8b57;
+    }
+
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      display: inline-block;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    select, button {
+      padding: 10px;
+      margin: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+    }
+
+    button {
+      background-color: #2e8b57;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #246b43;
+    }
+
+    canvas {
+      margin-top: 30px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body>
+  <h1>MGNREGA Dashboard</h1>
+  <p>Select your State and District to view performance</p>
+
+  <div class="container">
+    <select id="stateSelect">
+      <option value="">Select State</option>
+      <option value="Tamil Nadu">Tamil Nadu</option>
+      <option value="Karnataka">Karnataka</option>
+      <option value="Kerala">Kerala</option>
+    </select>
+
+    <select id="districtSelect">
+      <option value="">Select District</option>
+    </select>
+
+    <br>
+    <button onclick="showData()">Show Performance</button>
+  </div>
+
+  <canvas id="performanceChart" width="400" height="200"></canvas>
+
+  <script>
+    const districts = {
+      "Tamil Nadu": ["Chennai", "Madurai", "Coimbatore", "Salem"],
+      "Karnataka": ["Bengaluru", "Mysuru", "Hubli"],
+      "Kerala": ["Kochi", "Thiruvananthapuram", "Kozhikode"]
+    };
+
+    const fakeData = {
+      "Chennai": [80, 75, 90, 85],
+      "Madurai": [70, 65, 78, 80],
+      "Coimbatore": [88, 82, 85, 87],
+      "Salem": [60, 65, 70, 75],
+      "Bengaluru": [95, 92, 96, 93],
+      "Mysuru": [80, 78, 82, 85],
+      "Hubli": [65, 70, 68, 72],
+      "Kochi": [85, 88, 90, 86],
+      "Thiruvananthapuram": [78, 75, 80, 82],
+      "Kozhikode": [70, 72, 75, 77]
+    };
+
+    const months = ["Jan", "Feb", "Mar", "Apr"];
+    let chartInstance = null;
+
+    document.getElementById("stateSelect").addEventListener("change", function() {
+      const state = this.value;
+      const districtSelect = document.getElementById("districtSelect");
+      districtSelect.innerHTML = '<option value="">Select District</option>';
+      if (districts[state]) {
+        districts[state].forEach(d => {
+          const option = document.createElement("option");
+          option.value = d;
+          option.textContent = d;
+          districtSelect.appendChild(option);
+        });
+      }
+    });
+
+    function showData() {
+      const district = document.getElementById("districtSelect").value;
+      if (!district) {
+        alert("Please select a district!");
+        return;
+      }
+
+      const data = fakeData[district] || [0, 0, 0, 0];
+
+      const ctx = document.getElementById("performanceChart").getContext("2d");
+
+      if (chartInstance) chartInstance.destroy(); // clear previous chart
+
+      chartInstance = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: months,
+          datasets: [{
+            label: `${district} MGNREGA Performance (%)`,
+            data: data,
+            backgroundColor: "#2e8b57"
+          }]
+        },
+        options: {
+          scales: {
+            y: { beginAtZero: true, max: 100 }
+          }
+        }
+      });
+    }
+  </script>
+</body>
+</html>
