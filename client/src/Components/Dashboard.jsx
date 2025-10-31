@@ -10,7 +10,7 @@ import {
   CartesianGrid,
 } from "recharts";
 
-const DATA_URL = "http://localhost:5000/api/data";
+const DATA_URL = "https://mgnrega-dashboard-back.onrender.com/api/data";
 
 export default function Dashboard() {
   const [data, setData] = useState([]);
